@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="005-insert-initial-platform-user" author="mms">
+        <comment>Insert initial platform admin user for system bootstrapping</comment>
+
+        <insert tableName="platform_users">
+            <column name="id" valueComputed="'00000000-0000-0000-0000-000000000001'::uuid"/>
+            <column name="username" value="admin"/>
+            <column name="email" value="admin@platform.local"/>
+            <column name="password_hash" value="$2a$10$8K1p/a0dL3EjY6xJVUWzyeH3dC9hBGGaQpxWRMn9fLM.K3WK/1YBK"/>
+            <column name="first_name" value="Platform"/>
+            <column name="last_name" value="Administrator"/>
+            <column name="is_active" valueBoolean="true"/>
+            <column name="is_email_verified" valueBoolean="true"/>
+            <column name="created_by" valueComputed="'00000000-0000-0000-0000-000000000001'::uuid"/>
+            <column name="created_date" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="last_modified_by" valueComputed="'00000000-0000-0000-0000-000000000001'::uuid"/>
+            <column name="last_modified_date" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="platform_users">
+                <where>id = '00000000-0000-0000-0000-000000000001'::uuid</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
