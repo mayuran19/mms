@@ -10,9 +10,10 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import BusinessIcon from '@mui/icons-material/Business'
 import apiService from '@/services/api'
+import { useAuthStore } from '@/store/authStore'
 
 export const Route = createFileRoute('/tenant/login')({
   component: TenantLogin,
@@ -20,11 +21,19 @@ export const Route = createFileRoute('/tenant/login')({
 
 function TenantLogin() {
   const navigate = useNavigate()
+  const { login, isAuthenticated } = useAuthStore()
   const [tenantId, setTenantId] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate({ to: '/tenant/dashboard' })
+    }
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,8 +45,16 @@ function TenantLogin() {
 
       if (response.error) {
         setError(response.error)
-      } else {
-        // Login successful, navigate to tenant dashboard
+      } else if (response.data) {
+        // Login successful, update auth state with server response
+        const loginResponse = response.data as any
+        login({
+          id: loginResponse.userId,
+          username: loginResponse.username,
+          email: loginResponse.email,
+          userType: loginResponse.userType.toLowerCase() as 'platform' | 'tenant',
+          tenantId: loginResponse.tenantId,
+        })
         navigate({ to: '/tenant/dashboard' })
       }
     } catch (err) {

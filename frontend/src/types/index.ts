@@ -22,12 +22,36 @@ export interface TenantUser extends User {
 export interface Tenant {
   id: string
   name: string
-  isActive: boolean
+  slug: string
+  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
+  createdBy: string
   createdDate: string
+  lastModifiedBy: string
+  lastModifiedDate: string
+}
+
+export interface CreateTenantRequest {
+  name: string
+  slug: string
+  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
+}
+
+export interface UpdateTenantRequest {
+  name?: string
+  status?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
 }
 
 export interface AuthState {
   isAuthenticated: boolean
   user?: User
   userType?: 'platform' | 'tenant'
+}
+
+export interface LoginResponse {
+  userId: string
+  username: string
+  email: string
+  userType: string
+  tenantId?: string
+  message: string
 }

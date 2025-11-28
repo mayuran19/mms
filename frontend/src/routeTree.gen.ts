@@ -9,73 +9,172 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TenantRouteImport } from './routes/tenant'
+import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TenantLoginRouteImport } from './routes/tenant/login'
+import { Route as TenantAuthenticatedRouteImport } from './routes/tenant/_authenticated'
 import { Route as PlatformLoginRouteImport } from './routes/platform/login'
-import { Route as PlatformDashboardRouteImport } from './routes/platform/dashboard'
+import { Route as PlatformAuthenticatedRouteImport } from './routes/platform/_authenticated'
+import { Route as TenantAuthenticatedDashboardRouteImport } from './routes/tenant/_authenticated/dashboard'
+import { Route as PlatformAuthenticatedUsersRouteImport } from './routes/platform/_authenticated/users'
+import { Route as PlatformAuthenticatedTenantsRouteImport } from './routes/platform/_authenticated/tenants'
+import { Route as PlatformAuthenticatedDashboardRouteImport } from './routes/platform/_authenticated/dashboard'
 
+const TenantRoute = TenantRouteImport.update({
+  id: '/tenant',
+  path: '/tenant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatformRoute = PlatformRouteImport.update({
+  id: '/platform',
+  path: '/platform',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TenantLoginRoute = TenantLoginRouteImport.update({
-  id: '/tenant/login',
-  path: '/tenant/login',
-  getParentRoute: () => rootRouteImport,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => TenantRoute,
+} as any)
+const TenantAuthenticatedRoute = TenantAuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => TenantRoute,
 } as any)
 const PlatformLoginRoute = PlatformLoginRouteImport.update({
-  id: '/platform/login',
-  path: '/platform/login',
-  getParentRoute: () => rootRouteImport,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PlatformRoute,
 } as any)
-const PlatformDashboardRoute = PlatformDashboardRouteImport.update({
-  id: '/platform/dashboard',
-  path: '/platform/dashboard',
-  getParentRoute: () => rootRouteImport,
+const PlatformAuthenticatedRoute = PlatformAuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => PlatformRoute,
 } as any)
+const TenantAuthenticatedDashboardRoute =
+  TenantAuthenticatedDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => TenantAuthenticatedRoute,
+  } as any)
+const PlatformAuthenticatedUsersRoute =
+  PlatformAuthenticatedUsersRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => PlatformAuthenticatedRoute,
+  } as any)
+const PlatformAuthenticatedTenantsRoute =
+  PlatformAuthenticatedTenantsRouteImport.update({
+    id: '/tenants',
+    path: '/tenants',
+    getParentRoute: () => PlatformAuthenticatedRoute,
+  } as any)
+const PlatformAuthenticatedDashboardRoute =
+  PlatformAuthenticatedDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => PlatformAuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/platform/dashboard': typeof PlatformDashboardRoute
+  '/platform': typeof PlatformAuthenticatedRouteWithChildren
+  '/tenant': typeof TenantAuthenticatedRouteWithChildren
   '/platform/login': typeof PlatformLoginRoute
   '/tenant/login': typeof TenantLoginRoute
+  '/platform/dashboard': typeof PlatformAuthenticatedDashboardRoute
+  '/platform/tenants': typeof PlatformAuthenticatedTenantsRoute
+  '/platform/users': typeof PlatformAuthenticatedUsersRoute
+  '/tenant/dashboard': typeof TenantAuthenticatedDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/platform/dashboard': typeof PlatformDashboardRoute
+  '/platform': typeof PlatformAuthenticatedRouteWithChildren
+  '/tenant': typeof TenantAuthenticatedRouteWithChildren
   '/platform/login': typeof PlatformLoginRoute
   '/tenant/login': typeof TenantLoginRoute
+  '/platform/dashboard': typeof PlatformAuthenticatedDashboardRoute
+  '/platform/tenants': typeof PlatformAuthenticatedTenantsRoute
+  '/platform/users': typeof PlatformAuthenticatedUsersRoute
+  '/tenant/dashboard': typeof TenantAuthenticatedDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/platform/dashboard': typeof PlatformDashboardRoute
+  '/platform': typeof PlatformRouteWithChildren
+  '/tenant': typeof TenantRouteWithChildren
+  '/platform/_authenticated': typeof PlatformAuthenticatedRouteWithChildren
   '/platform/login': typeof PlatformLoginRoute
+  '/tenant/_authenticated': typeof TenantAuthenticatedRouteWithChildren
   '/tenant/login': typeof TenantLoginRoute
+  '/platform/_authenticated/dashboard': typeof PlatformAuthenticatedDashboardRoute
+  '/platform/_authenticated/tenants': typeof PlatformAuthenticatedTenantsRoute
+  '/platform/_authenticated/users': typeof PlatformAuthenticatedUsersRoute
+  '/tenant/_authenticated/dashboard': typeof TenantAuthenticatedDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/platform/dashboard' | '/platform/login' | '/tenant/login'
+  fullPaths:
+    | '/'
+    | '/platform'
+    | '/tenant'
+    | '/platform/login'
+    | '/tenant/login'
+    | '/platform/dashboard'
+    | '/platform/tenants'
+    | '/platform/users'
+    | '/tenant/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/platform/dashboard' | '/platform/login' | '/tenant/login'
+  to:
+    | '/'
+    | '/platform'
+    | '/tenant'
+    | '/platform/login'
+    | '/tenant/login'
+    | '/platform/dashboard'
+    | '/platform/tenants'
+    | '/platform/users'
+    | '/tenant/dashboard'
   id:
     | '__root__'
     | '/'
-    | '/platform/dashboard'
+    | '/platform'
+    | '/tenant'
+    | '/platform/_authenticated'
     | '/platform/login'
+    | '/tenant/_authenticated'
     | '/tenant/login'
+    | '/platform/_authenticated/dashboard'
+    | '/platform/_authenticated/tenants'
+    | '/platform/_authenticated/users'
+    | '/tenant/_authenticated/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PlatformDashboardRoute: typeof PlatformDashboardRoute
-  PlatformLoginRoute: typeof PlatformLoginRoute
-  TenantLoginRoute: typeof TenantLoginRoute
+  PlatformRoute: typeof PlatformRouteWithChildren
+  TenantRoute: typeof TenantRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tenant': {
+      id: '/tenant'
+      path: '/tenant'
+      fullPath: '/tenant'
+      preLoaderRoute: typeof TenantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/platform': {
+      id: '/platform'
+      path: '/platform'
+      fullPath: '/platform'
+      preLoaderRoute: typeof PlatformRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -85,33 +184,122 @@ declare module '@tanstack/react-router' {
     }
     '/tenant/login': {
       id: '/tenant/login'
-      path: '/tenant/login'
+      path: '/login'
       fullPath: '/tenant/login'
       preLoaderRoute: typeof TenantLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof TenantRoute
+    }
+    '/tenant/_authenticated': {
+      id: '/tenant/_authenticated'
+      path: ''
+      fullPath: '/tenant'
+      preLoaderRoute: typeof TenantAuthenticatedRouteImport
+      parentRoute: typeof TenantRoute
     }
     '/platform/login': {
       id: '/platform/login'
-      path: '/platform/login'
+      path: '/login'
       fullPath: '/platform/login'
       preLoaderRoute: typeof PlatformLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PlatformRoute
     }
-    '/platform/dashboard': {
-      id: '/platform/dashboard'
-      path: '/platform/dashboard'
+    '/platform/_authenticated': {
+      id: '/platform/_authenticated'
+      path: ''
+      fullPath: '/platform'
+      preLoaderRoute: typeof PlatformAuthenticatedRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/tenant/_authenticated/dashboard': {
+      id: '/tenant/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/tenant/dashboard'
+      preLoaderRoute: typeof TenantAuthenticatedDashboardRouteImport
+      parentRoute: typeof TenantAuthenticatedRoute
+    }
+    '/platform/_authenticated/users': {
+      id: '/platform/_authenticated/users'
+      path: '/users'
+      fullPath: '/platform/users'
+      preLoaderRoute: typeof PlatformAuthenticatedUsersRouteImport
+      parentRoute: typeof PlatformAuthenticatedRoute
+    }
+    '/platform/_authenticated/tenants': {
+      id: '/platform/_authenticated/tenants'
+      path: '/tenants'
+      fullPath: '/platform/tenants'
+      preLoaderRoute: typeof PlatformAuthenticatedTenantsRouteImport
+      parentRoute: typeof PlatformAuthenticatedRoute
+    }
+    '/platform/_authenticated/dashboard': {
+      id: '/platform/_authenticated/dashboard'
+      path: '/dashboard'
       fullPath: '/platform/dashboard'
-      preLoaderRoute: typeof PlatformDashboardRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PlatformAuthenticatedDashboardRouteImport
+      parentRoute: typeof PlatformAuthenticatedRoute
     }
   }
 }
 
+interface PlatformAuthenticatedRouteChildren {
+  PlatformAuthenticatedDashboardRoute: typeof PlatformAuthenticatedDashboardRoute
+  PlatformAuthenticatedTenantsRoute: typeof PlatformAuthenticatedTenantsRoute
+  PlatformAuthenticatedUsersRoute: typeof PlatformAuthenticatedUsersRoute
+}
+
+const PlatformAuthenticatedRouteChildren: PlatformAuthenticatedRouteChildren = {
+  PlatformAuthenticatedDashboardRoute: PlatformAuthenticatedDashboardRoute,
+  PlatformAuthenticatedTenantsRoute: PlatformAuthenticatedTenantsRoute,
+  PlatformAuthenticatedUsersRoute: PlatformAuthenticatedUsersRoute,
+}
+
+const PlatformAuthenticatedRouteWithChildren =
+  PlatformAuthenticatedRoute._addFileChildren(
+    PlatformAuthenticatedRouteChildren,
+  )
+
+interface PlatformRouteChildren {
+  PlatformAuthenticatedRoute: typeof PlatformAuthenticatedRouteWithChildren
+  PlatformLoginRoute: typeof PlatformLoginRoute
+}
+
+const PlatformRouteChildren: PlatformRouteChildren = {
+  PlatformAuthenticatedRoute: PlatformAuthenticatedRouteWithChildren,
+  PlatformLoginRoute: PlatformLoginRoute,
+}
+
+const PlatformRouteWithChildren = PlatformRoute._addFileChildren(
+  PlatformRouteChildren,
+)
+
+interface TenantAuthenticatedRouteChildren {
+  TenantAuthenticatedDashboardRoute: typeof TenantAuthenticatedDashboardRoute
+}
+
+const TenantAuthenticatedRouteChildren: TenantAuthenticatedRouteChildren = {
+  TenantAuthenticatedDashboardRoute: TenantAuthenticatedDashboardRoute,
+}
+
+const TenantAuthenticatedRouteWithChildren =
+  TenantAuthenticatedRoute._addFileChildren(TenantAuthenticatedRouteChildren)
+
+interface TenantRouteChildren {
+  TenantAuthenticatedRoute: typeof TenantAuthenticatedRouteWithChildren
+  TenantLoginRoute: typeof TenantLoginRoute
+}
+
+const TenantRouteChildren: TenantRouteChildren = {
+  TenantAuthenticatedRoute: TenantAuthenticatedRouteWithChildren,
+  TenantLoginRoute: TenantLoginRoute,
+}
+
+const TenantRouteWithChildren =
+  TenantRoute._addFileChildren(TenantRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PlatformDashboardRoute: PlatformDashboardRoute,
-  PlatformLoginRoute: PlatformLoginRoute,
-  TenantLoginRoute: TenantLoginRoute,
+  PlatformRoute: PlatformRouteWithChildren,
+  TenantRoute: TenantRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

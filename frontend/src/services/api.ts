@@ -14,6 +14,7 @@ interface TenantLoginRequest extends LoginRequest {
 interface ApiResponse<T> {
   data?: T
   error?: string
+  status?: number
 }
 
 class ApiService {
@@ -31,12 +32,17 @@ class ApiService {
         credentials: 'include', // Include cookies for session management
       })
 
+      // For 401, return status without throwing error
+      if (response.status === 401) {
+        return { status: 401, error: 'Unauthorized' }
+      }
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const data = await response.json()
-      return { data }
+      return { data, status: response.status }
     } catch (error) {
       console.error('API request failed:', error)
       return { error: error instanceof Error ? error.message : 'Unknown error' }
@@ -54,6 +60,13 @@ class ApiService {
   async platformLogout() {
     return this.request('/auth/platform/logout', {
       method: 'POST',
+    })
+  }
+
+  // Check authentication status
+  async getCurrentUser() {
+    return this.request('/auth/me', {
+      method: 'GET',
     })
   }
 
@@ -78,9 +91,43 @@ class ApiService {
     })
   }
 
-  async getTenants() {
-    return this.request('/platform/tenants', {
+  // Tenant Management
+  async getTenants(status?: string) {
+    const params = status ? `?status=${status}` : ''
+    return this.request(`/platform/tenants${params}`, {
       method: 'GET',
+    })
+  }
+
+  async getTenantById(id: string) {
+    return this.request(`/platform/tenants/${id}`, {
+      method: 'GET',
+    })
+  }
+
+  async getTenantBySlug(slug: string) {
+    return this.request(`/platform/tenants/slug/${slug}`, {
+      method: 'GET',
+    })
+  }
+
+  async createTenant(data: { name: string; slug: string; status: string }) {
+    return this.request('/platform/tenants', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateTenant(id: string, data: { name?: string; status?: string }) {
+    return this.request(`/platform/tenants/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteTenant(id: string) {
+    return this.request(`/platform/tenants/${id}`, {
+      method: 'DELETE',
     })
   }
 
