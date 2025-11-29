@@ -5,6 +5,8 @@ package com.mayuran19.mms.jooq;
 
 
 import com.mayuran19.mms.jooq.tables.PlatformUsers;
+import com.mayuran19.mms.jooq.tables.SpringSession;
+import com.mayuran19.mms.jooq.tables.SpringSessionAttributes;
 import com.mayuran19.mms.jooq.tables.TenantUsers;
 import com.mayuran19.mms.jooq.tables.Tenants;
 
@@ -19,6 +21,16 @@ public class Tables {
      * The table <code>public.platform_users</code>.
      */
     public static final PlatformUsers PLATFORM_USERS = PlatformUsers.PLATFORM_USERS;
+
+    /**
+     * The table <code>public.spring_session</code>.
+     */
+    public static final SpringSession SPRING_SESSION = SpringSession.SPRING_SESSION;
+
+    /**
+     * The table <code>public.spring_session_attributes</code>.
+     */
+    public static final SpringSessionAttributes SPRING_SESSION_ATTRIBUTES = SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES;
 
     /**
      * The table <code>public.tenant_users</code>.

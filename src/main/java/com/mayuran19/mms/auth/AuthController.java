@@ -75,7 +75,7 @@ public class AuthController {
     @PostMapping("/tenant/login")
     public ResponseEntity<?> tenantLogin(@RequestBody TenantLoginRequest loginRequest, HttpServletRequest request) {
         try {
-            String username = loginRequest.email() + "@tenant:" + loginRequest.tenantSlug();
+            String username = loginRequest.username() + "@tenant:" + loginRequest.tenantSlug();
 
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

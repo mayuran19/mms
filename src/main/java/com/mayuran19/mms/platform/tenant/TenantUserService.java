@@ -4,6 +4,7 @@ import com.mayuran19.mms.jooq.tables.pojos.TenantUsers;
 import com.mayuran19.mms.platform.tenant.dto.CreateTenantUserRequest;
 import com.mayuran19.mms.platform.tenant.dto.TenantUserResponse;
 import com.mayuran19.mms.platform.tenant.dto.UpdateTenantUserRequest;
+import com.mayuran19.mms.security.PlatformUserPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,14 +31,14 @@ public class TenantUserService {
     }
 
     @Transactional
-    public TenantUserResponse createTenantUser(UUID tenantId, CreateTenantUserRequest request) {
+    public TenantUserResponse createTenantUser(PlatformUserPrincipal principal, UUID tenantId, CreateTenantUserRequest request) {
         // Verify tenant exists
         tenantRepository.findById(tenantId)
             .orElseThrow(() -> new TenantNotFoundException("Tenant not found with id: " + tenantId));
 
-        // Check if email already exists
+        // Check if username already exists
         if (tenantUserRepository.existsByEmail(request.email())) {
-            throw new TenantUserAlreadyExistsException("User with email '" + request.email() + "' already exists");
+            throw new TenantUserAlreadyExistsException("User with username '" + request.email() + "' already exists");
         }
 
         OffsetDateTime now = OffsetDateTime.now();
@@ -52,7 +53,7 @@ public class TenantUserService {
         user.setCreatedDate(now);
         user.setLastModifiedDate(now);
 
-        TenantUsers created = tenantUserRepository.create(user);
+        TenantUsers created = tenantUserRepository.create(principal, user);
         return TenantUserResponse.fromEntity(created);
     }
 

@@ -8,7 +8,7 @@ interface LoginRequest {
 }
 
 interface TenantLoginRequest extends LoginRequest {
-  tenantId: string
+  tenantSlug: string
 }
 
 interface ApiResponse<T> {
@@ -134,6 +134,45 @@ class ApiService {
   // Tenant API endpoints
   async getTenantMembers() {
     return this.request('/tenant/members', {
+      method: 'GET',
+    })
+  }
+
+  // Tenant User Management (Platform)
+  async getTenantUsers(tenantId: string) {
+    return this.request(`/platform/tenants/${tenantId}/users`, {
+      method: 'GET',
+    })
+  }
+
+  async getTenantUserById(tenantId: string, userId: string) {
+    return this.request(`/platform/tenants/${tenantId}/users/${userId}`, {
+      method: 'GET',
+    })
+  }
+
+  async createTenantUser(tenantId: string, data: { email: string; password: string; firstName: string; lastName: string; isActive: boolean }) {
+    return this.request(`/platform/tenants/${tenantId}/users`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateTenantUser(tenantId: string, userId: string, data: { firstName?: string; lastName?: string; isActive?: boolean }) {
+    return this.request(`/platform/tenants/${tenantId}/users/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteTenantUser(tenantId: string, userId: string) {
+    return this.request(`/platform/tenants/${tenantId}/users/${userId}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async getTenantUserCount(tenantId: string) {
+    return this.request(`/platform/tenants/${tenantId}/users/count`, {
       method: 'GET',
     })
   }

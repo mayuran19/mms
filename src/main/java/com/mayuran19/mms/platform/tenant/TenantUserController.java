@@ -3,12 +3,15 @@ package com.mayuran19.mms.platform.tenant;
 import com.mayuran19.mms.platform.tenant.dto.CreateTenantUserRequest;
 import com.mayuran19.mms.platform.tenant.dto.TenantUserResponse;
 import com.mayuran19.mms.platform.tenant.dto.UpdateTenantUserRequest;
+import com.mayuran19.mms.security.CurrentPlatformUser;
+import com.mayuran19.mms.security.PlatformUserPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,10 +28,10 @@ public class TenantUserController {
 
     @PostMapping
     public ResponseEntity<TenantUserResponse> createTenantUser(
+            @CurrentPlatformUser PlatformUserPrincipal principal,
         @PathVariable UUID tenantId,
-        @Valid @RequestBody CreateTenantUserRequest request
-    ) {
-        TenantUserResponse response = tenantUserService.createTenantUser(tenantId, request);
+        @Valid @RequestBody CreateTenantUserRequest request) {
+        TenantUserResponse response = tenantUserService.createTenantUser(principal, tenantId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

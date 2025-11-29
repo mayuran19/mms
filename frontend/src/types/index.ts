@@ -14,10 +14,6 @@ export interface PlatformUser extends User {
   // Platform-specific user properties
 }
 
-export interface TenantUser extends User {
-  tenantId: string
-  // Tenant-specific user properties
-}
 
 export interface Tenant {
   id: string
@@ -54,4 +50,28 @@ export interface LoginResponse {
   userType: string
   tenantId?: string
   message: string
+}
+
+export interface TenantUser {
+  id: string
+  tenantId: string
+  email: string
+  firstName: string
+  lastName: string
+  createdDate: string
+  lastModifiedDate: string
+}
+
+export interface CreateTenantUserRequest {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  isActive: boolean
+}
+
+export interface UpdateTenantUserRequest {
+  firstName?: string
+  lastName?: string
+  isActive?: boolean
 }

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import {createFileRoute, useNavigate} from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import {
   Box,
@@ -26,11 +26,12 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import PeopleIcon from '@mui/icons-material/People'
 import apiService from '@/services/api'
 import { Tenant, CreateTenantRequest, UpdateTenantRequest } from '@/types'
 import TenantDialog from '@/components/TenantDialog'
 
-export const Route = createFileRoute('/platform/_authenticated/tenants')({
+export const Route = createFileRoute('/platform/_authenticated/tenants/')({
   component: TenantsPage,
 })
 
@@ -43,6 +44,7 @@ function TenantsPage() {
   const [selectedTenant, setSelectedTenant] = useState<Tenant | undefined>()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [tenantToDelete, setTenantToDelete] = useState<Tenant | null>(null)
+  const navigate = useNavigate()
 
   const fetchTenants = async () => {
     setLoading(true)
@@ -216,8 +218,17 @@ function TenantsPage() {
                       <TableCell align="right">
                         <IconButton
                           size="small"
+                          onClick={() => navigate({ to: `/platform/tenants/${tenant.id}/users` })}
+                          color="info"
+                          title="Manage Users"
+                        >
+                          <PeopleIcon />
+                        </IconButton>
+                        <IconButton
+                          size="small"
                           onClick={() => handleEditClick(tenant)}
                           color="primary"
+                          title="Edit Tenant"
                         >
                           <EditIcon />
                         </IconButton>
@@ -225,6 +236,7 @@ function TenantsPage() {
                           size="small"
                           onClick={() => handleDeleteClick(tenant)}
                           color="error"
+                          title="Delete Tenant"
                         >
                           <DeleteIcon />
                         </IconButton>

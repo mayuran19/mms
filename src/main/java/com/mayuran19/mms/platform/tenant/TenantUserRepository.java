@@ -1,6 +1,7 @@
 package com.mayuran19.mms.platform.tenant;
 
 import com.mayuran19.mms.jooq.tables.pojos.TenantUsers;
+import com.mayuran19.mms.security.PlatformUserPrincipal;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ public class TenantUserRepository {
         this.dsl = dsl;
     }
 
-    public TenantUsers create(TenantUsers user) {
+    public TenantUsers create(PlatformUserPrincipal principal, TenantUsers user) {
         return dsl.insertInto(TENANT_USERS)
             .set(TENANT_USERS.ID, user.getId())
             .set(TENANT_USERS.TENANT_ID, user.getTenantId())
@@ -30,6 +31,8 @@ public class TenantUserRepository {
             .set(TENANT_USERS.LAST_NAME, user.getLastName())
             .set(TENANT_USERS.CREATED_DATE, user.getCreatedDate())
             .set(TENANT_USERS.LAST_MODIFIED_DATE, user.getLastModifiedDate())
+            .set(TENANT_USERS.CREATED_BY, principal.id())
+            .set(TENANT_USERS.LAST_MODIFIED_BY, principal.id())
             .returning()
             .fetchOneInto(TenantUsers.class);
     }

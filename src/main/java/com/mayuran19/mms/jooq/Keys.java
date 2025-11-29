@@ -5,9 +5,13 @@ package com.mayuran19.mms.jooq;
 
 
 import com.mayuran19.mms.jooq.tables.PlatformUsers;
+import com.mayuran19.mms.jooq.tables.SpringSession;
+import com.mayuran19.mms.jooq.tables.SpringSessionAttributes;
 import com.mayuran19.mms.jooq.tables.TenantUsers;
 import com.mayuran19.mms.jooq.tables.Tenants;
 import com.mayuran19.mms.jooq.tables.records.PlatformUsersRecord;
+import com.mayuran19.mms.jooq.tables.records.SpringSessionAttributesRecord;
+import com.mayuran19.mms.jooq.tables.records.SpringSessionRecord;
 import com.mayuran19.mms.jooq.tables.records.TenantUsersRecord;
 import com.mayuran19.mms.jooq.tables.records.TenantsRecord;
 
@@ -32,6 +36,9 @@ public class Keys {
     public static final UniqueKey<PlatformUsersRecord> PLATFORM_USERS_EMAIL_KEY = Internal.createUniqueKey(PlatformUsers.PLATFORM_USERS, DSL.name("platform_users_email_key"), new TableField[] { PlatformUsers.PLATFORM_USERS.EMAIL }, true);
     public static final UniqueKey<PlatformUsersRecord> PLATFORM_USERS_PKEY = Internal.createUniqueKey(PlatformUsers.PLATFORM_USERS, DSL.name("platform_users_pkey"), new TableField[] { PlatformUsers.PLATFORM_USERS.ID }, true);
     public static final UniqueKey<PlatformUsersRecord> PLATFORM_USERS_USERNAME_KEY = Internal.createUniqueKey(PlatformUsers.PLATFORM_USERS, DSL.name("platform_users_username_key"), new TableField[] { PlatformUsers.PLATFORM_USERS.USERNAME }, true);
+    public static final UniqueKey<SpringSessionRecord> SPRING_SESSION_PKEY = Internal.createUniqueKey(SpringSession.SPRING_SESSION, DSL.name("spring_session_pkey"), new TableField[] { SpringSession.SPRING_SESSION.PRIMARY_ID }, true);
+    public static final UniqueKey<SpringSessionRecord> SPRING_SESSION_SESSION_ID_KEY = Internal.createUniqueKey(SpringSession.SPRING_SESSION, DSL.name("spring_session_session_id_key"), new TableField[] { SpringSession.SPRING_SESSION.SESSION_ID }, true);
+    public static final UniqueKey<SpringSessionAttributesRecord> PK_SPRING_SESSION_ATTRIBUTES = Internal.createUniqueKey(SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES, DSL.name("pk_spring_session_attributes"), new TableField[] { SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES.SESSION_PRIMARY_ID, SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES.ATTRIBUTE_NAME }, true);
     public static final UniqueKey<TenantUsersRecord> TENANT_USERS_PKEY = Internal.createUniqueKey(TenantUsers.TENANT_USERS, DSL.name("tenant_users_pkey"), new TableField[] { TenantUsers.TENANT_USERS.ID }, true);
     public static final UniqueKey<TenantsRecord> TENANTS_PKEY = Internal.createUniqueKey(Tenants.TENANTS, DSL.name("tenants_pkey"), new TableField[] { Tenants.TENANTS.ID }, true);
     public static final UniqueKey<TenantsRecord> TENANTS_SLUG_KEY = Internal.createUniqueKey(Tenants.TENANTS, DSL.name("tenants_slug_key"), new TableField[] { Tenants.TENANTS.SLUG }, true);
@@ -40,5 +47,6 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<SpringSessionAttributesRecord, SpringSessionRecord> SPRING_SESSION_ATTRIBUTES__FK_SPRING_SESSION_ATTRIBUTES_SESSION = Internal.createForeignKey(SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES, DSL.name("fk_spring_session_attributes_session"), new TableField[] { SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES.SESSION_PRIMARY_ID }, Keys.SPRING_SESSION_PKEY, new TableField[] { SpringSession.SPRING_SESSION.PRIMARY_ID }, true);
     public static final ForeignKey<TenantUsersRecord, TenantsRecord> TENANT_USERS__FK_TENANT_USERS_TENANT_ID = Internal.createForeignKey(TenantUsers.TENANT_USERS, DSL.name("fk_tenant_users_tenant_id"), new TableField[] { TenantUsers.TENANT_USERS.TENANT_ID }, Keys.TENANTS_PKEY, new TableField[] { Tenants.TENANTS.ID }, true);
 }

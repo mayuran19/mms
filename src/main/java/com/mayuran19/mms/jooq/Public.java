@@ -5,6 +5,8 @@ package com.mayuran19.mms.jooq;
 
 
 import com.mayuran19.mms.jooq.tables.PlatformUsers;
+import com.mayuran19.mms.jooq.tables.SpringSession;
+import com.mayuran19.mms.jooq.tables.SpringSessionAttributes;
 import com.mayuran19.mms.jooq.tables.TenantUsers;
 import com.mayuran19.mms.jooq.tables.Tenants;
 
@@ -35,6 +37,16 @@ public class Public extends SchemaImpl {
     public final PlatformUsers PLATFORM_USERS = PlatformUsers.PLATFORM_USERS;
 
     /**
+     * The table <code>public.spring_session</code>.
+     */
+    public final SpringSession SPRING_SESSION = SpringSession.SPRING_SESSION;
+
+    /**
+     * The table <code>public.spring_session_attributes</code>.
+     */
+    public final SpringSessionAttributes SPRING_SESSION_ATTRIBUTES = SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES;
+
+    /**
      * The table <code>public.tenant_users</code>.
      */
     public final TenantUsers TENANT_USERS = TenantUsers.TENANT_USERS;
@@ -61,6 +73,8 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             PlatformUsers.PLATFORM_USERS,
+            SpringSession.SPRING_SESSION,
+            SpringSessionAttributes.SPRING_SESSION_ATTRIBUTES,
             TenantUsers.TENANT_USERS,
             Tenants.TENANTS
         );

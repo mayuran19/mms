@@ -22,7 +22,7 @@ export const Route = createFileRoute('/tenant/login')({
 function TenantLogin() {
   const navigate = useNavigate()
   const { login, isAuthenticated } = useAuthStore()
-  const [tenantId, setTenantId] = useState('')
+  const [tenantSlug, setTenantSlug] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -41,7 +41,7 @@ function TenantLogin() {
     setLoading(true)
 
     try {
-      const response = await apiService.tenantLogin({ tenantId, username, password })
+      const response = await apiService.tenantLogin({ tenantSlug: tenantSlug, username, password })
 
       if (response.error) {
         setError(response.error)
@@ -102,8 +102,8 @@ function TenantLogin() {
               fullWidth
               label="Tenant ID"
               margin="normal"
-              value={tenantId}
-              onChange={(e) => setTenantId(e.target.value)}
+              value={tenantSlug}
+              onChange={(e) => setTenantSlug(e.target.value)}
               required
               autoFocus
               helperText="Enter your organization's tenant ID"

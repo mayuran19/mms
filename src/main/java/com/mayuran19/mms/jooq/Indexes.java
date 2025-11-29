@@ -5,6 +5,7 @@ package com.mayuran19.mms.jooq;
 
 
 import com.mayuran19.mms.jooq.tables.PlatformUsers;
+import com.mayuran19.mms.jooq.tables.SpringSession;
 import com.mayuran19.mms.jooq.tables.TenantUsers;
 import com.mayuran19.mms.jooq.tables.Tenants;
 
@@ -27,6 +28,8 @@ public class Indexes {
     public static final Index IDX_PLATFORM_USERS_EMAIL = Internal.createIndex(DSL.name("idx_platform_users_email"), PlatformUsers.PLATFORM_USERS, new OrderField[] { PlatformUsers.PLATFORM_USERS.EMAIL }, false);
     public static final Index IDX_PLATFORM_USERS_IS_ACTIVE = Internal.createIndex(DSL.name("idx_platform_users_is_active"), PlatformUsers.PLATFORM_USERS, new OrderField[] { PlatformUsers.PLATFORM_USERS.IS_ACTIVE }, false);
     public static final Index IDX_PLATFORM_USERS_USERNAME = Internal.createIndex(DSL.name("idx_platform_users_username"), PlatformUsers.PLATFORM_USERS, new OrderField[] { PlatformUsers.PLATFORM_USERS.USERNAME }, false);
+    public static final Index IDX_SPRING_SESSION_EXPIRY_TIME = Internal.createIndex(DSL.name("idx_spring_session_expiry_time"), SpringSession.SPRING_SESSION, new OrderField[] { SpringSession.SPRING_SESSION.EXPIRY_TIME }, false);
+    public static final Index IDX_SPRING_SESSION_PRINCIPAL_NAME = Internal.createIndex(DSL.name("idx_spring_session_principal_name"), SpringSession.SPRING_SESSION, new OrderField[] { SpringSession.SPRING_SESSION.PRINCIPAL_NAME }, false);
     public static final Index IDX_TENANT_USERS_EMAIL = Internal.createIndex(DSL.name("idx_tenant_users_email"), TenantUsers.TENANT_USERS, new OrderField[] { TenantUsers.TENANT_USERS.EMAIL }, false);
     public static final Index IDX_TENANT_USERS_STATUS = Internal.createIndex(DSL.name("idx_tenant_users_status"), TenantUsers.TENANT_USERS, new OrderField[] { TenantUsers.TENANT_USERS.STATUS }, false);
     public static final Index IDX_TENANT_USERS_TENANT_ID = Internal.createIndex(DSL.name("idx_tenant_users_tenant_id"), TenantUsers.TENANT_USERS, new OrderField[] { TenantUsers.TENANT_USERS.TENANT_ID }, false);

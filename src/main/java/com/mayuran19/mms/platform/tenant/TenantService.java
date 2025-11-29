@@ -1,12 +1,9 @@
 package com.mayuran19.mms.platform.tenant;
 
 import com.mayuran19.mms.jooq.tables.pojos.Tenants;
-import com.mayuran19.mms.security.CustomUserDetails;
 import com.mayuran19.mms.platform.tenant.dto.CreateTenantRequest;
 import com.mayuran19.mms.platform.tenant.dto.TenantResponse;
 import com.mayuran19.mms.platform.tenant.dto.UpdateTenantRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +21,11 @@ public class TenantService {
     }
 
     @Transactional
-    public TenantResponse createTenant(CreateTenantRequest request) {
+    public TenantResponse createTenant(CreateTenantRequest request, UUID currentUserId) {
         if (tenantRepository.existsBySlug(request.slug())) {
             throw new TenantAlreadyExistsException("Tenant with slug '" + request.slug() + "' already exists");
         }
 
-        UUID currentUserId = getCurrentUserId();
         OffsetDateTime now = OffsetDateTime.now();
 
         Tenants tenant = new Tenants();
@@ -73,13 +69,12 @@ public class TenantService {
     }
 
     @Transactional
-    public TenantResponse updateTenant(UUID id, UpdateTenantRequest request) {
+    public TenantResponse updateTenant(UUID id, UpdateTenantRequest request, UUID currentUserId) {
         Tenants existingTenant = tenantRepository.findById(id)
             .orElseThrow(() -> new TenantNotFoundException("Tenant not found with id: " + id));
 
         String name = request.name() != null ? request.name() : existingTenant.getName();
         String status = request.status() != null ? request.status() : existingTenant.getStatus();
-        UUID currentUserId = getCurrentUserId();
 
         Tenants updated = tenantRepository.update(id, name, status, currentUserId)
             .orElseThrow(() -> new RuntimeException("Failed to update tenant"));
@@ -99,13 +94,6 @@ public class TenantService {
         }
     }
 
-    private UUID getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            return userDetails.getId();
-        }
-        throw new RuntimeException("Unable to get current user");
-    }
 
     public static class TenantNotFoundException extends RuntimeException {
         public TenantNotFoundException(String message) {

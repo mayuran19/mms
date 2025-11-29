@@ -3,6 +3,8 @@ package com.mayuran19.mms.platform.tenant;
 import com.mayuran19.mms.platform.tenant.dto.CreateTenantRequest;
 import com.mayuran19.mms.platform.tenant.dto.TenantResponse;
 import com.mayuran19.mms.platform.tenant.dto.UpdateTenantRequest;
+import com.mayuran19.mms.security.CurrentPlatformUser;
+import com.mayuran19.mms.security.PlatformUserPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,11 @@ public class TenantController {
     }
 
     @PostMapping
-    public ResponseEntity<TenantResponse> createTenant(@Valid @RequestBody CreateTenantRequest request) {
-        TenantResponse response = tenantService.createTenant(request);
+    public ResponseEntity<TenantResponse> createTenant(
+        @CurrentPlatformUser PlatformUserPrincipal currentUser,
+        @Valid @RequestBody CreateTenantRequest request
+    ) {
+        TenantResponse response = tenantService.createTenant(request, currentUser.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -53,10 +58,11 @@ public class TenantController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TenantResponse> updateTenant(
+        @CurrentPlatformUser PlatformUserPrincipal currentUser,
         @PathVariable UUID id,
         @Valid @RequestBody UpdateTenantRequest request
     ) {
-        TenantResponse response = tenantService.updateTenant(id, request);
+        TenantResponse response = tenantService.updateTenant(id, request, currentUser.id());
         return ResponseEntity.ok(response);
     }
 
